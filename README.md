@@ -1,6 +1,8 @@
-# indesign-link-search
+# indesign-jump-to-page
 
-Search for specific links in an indesign document or book and then view the links within the document
+Ever used the jump to page dialog while you were in a book and get the error message that says this is not a valid page number? I do it all the time. 
+
+This fixes that problem. This script gives you a jump to page dialog that will take you to any page in the book regardless if the document is open or not.
 
 Compatible with InDesign CS6 and tested on OSX
 
