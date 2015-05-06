@@ -47,6 +47,9 @@ function findPageInDoc(page) {
         for (i = 0; i < items.length; i++) {
             if (items[i].name === page) {
                 app.activeWindow.activePage = items[i];
+                i = items.length;
+            } else if (i + 1 === items.length) {
+                alert("Page " + page + " does not exist in " + doc.name);
             }
         }
     };
@@ -54,23 +57,26 @@ function findPageInDoc(page) {
     if (app.books.length > 0) {
         myBook = app.activeBook;
         book = myBook.bookContents;
-    } else {
-        book = app.activeDocument;
-    }
-
-    if (book.reflect.name === "BookContents") {
-        for (docs = 0; docs < book.length; docs++) {
-            myDoc = book.item(docs);
-
-            pgRng = _parsePageRange(myDoc.documentPageRange);
-            if (_checkRange(pgRng, page) === true) {
-                aDoc = app.open(File(myDoc.fullName), true);
-                _goToPage(page, aDoc);
-                docs = book.length;
-            } else if (docs + 1 === book.length) {
-                alert("Page " + page + " does not exist in this book");
+        if (app.documents.length > 0 && book.itemByName(app.activeDocument.name) === null) {
+            _goToPage(page, app.activeDocument);
+        } else {
+            if (book.reflect.name === "BookContents") {
+                for (docs = 0; docs < book.length; docs++) {
+                    myDoc = book.item(docs);
+                    pgRng = _parsePageRange(myDoc.documentPageRange);
+                    if (_checkRange(pgRng, page) === true) {
+                        aDoc = app.open(File(myDoc.fullName), true);
+                        _goToPage(page, aDoc);
+                        docs = book.length;
+                    } else if (docs + 1 === book.length) {
+                        alert("Page " + page + " does not exist in this book");
+                    }
+                }
             }
         }
+    } else {
+        book = app.activeDocument;
+        _goToPage(page, book);
     }
     app.scriptPreferences.userInteractionLevel = UserInteractionLevels.INTERACT_WITH_ALL;
 }
@@ -120,8 +126,6 @@ function searchDialog() {
         }
     }
 }
-
-
 
 function inspectObject(targ) {
     "use strict";
